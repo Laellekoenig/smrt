@@ -1,2 +1,2 @@
 # AI4SG Project
-## Group 6
+## Group 6
