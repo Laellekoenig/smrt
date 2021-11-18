@@ -3,8 +3,10 @@ import numpy as np
 '''
 returns a nXn array that can be plotted
 boxes contain sum of values contained within
+!!! when plotting: don't forget to use origin="lower"
+-> plt.imshow(a, origin="lower")
 '''
-def vals_to_boxes(x, y, vals,x_min, x_max, y_min, y_max, n):
+def vals_to_boxes(x, y, vals, x_min, x_max, y_min, y_max, n):
     a = np.zeros((n, n))
 
     x_range = np.linspace(x_min, x_max, n + 1)
