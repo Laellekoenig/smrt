@@ -3,4 +3,5 @@
 /datasets/feinstaub_tram.csv
 /datasets/verkehrszählungen.csv
 /datasets/verkehrszählungen_reformatted.csv
+/datasets/verkehrszählungen_reformatted_update.csv
 *.icloud
