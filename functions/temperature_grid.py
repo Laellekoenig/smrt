@@ -11,8 +11,16 @@ from scipy.interpolate import griddata
 # col:  column that should be used as vals
 # avg:  if average or total should be calculated
 # interpolate:  if true, interpolates temperatures over grid
-def temperature_grid(df, date, hour, n, box=None, col="Lufttemperatur", avg=True, interpolate=False):
-    day = df[(df.Datum == date) & (df.Stunde == hour)]
+def temperature_grid(df, n, date=None, hour=None, box=None, col="Lufttemperatur", avg=True, interpolate=False):
+    if date is not None and hour is not None:
+        day = df[(df.Datum == date) & (df.Stunde == hour)]
+    elif hour is not None:
+        day = df[df.Stunde == hour]
+    elif date is not None:
+        day = df[df.Datum == date]
+    else:
+        day = df
+    
     x = day.Längengrad.tolist()
     y = day.Breitengrad.tolist()
     vals = day[col].tolist()

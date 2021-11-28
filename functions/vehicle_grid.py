@@ -8,16 +8,22 @@ import datetime as dt
 # n:    number of rows and cols in final grid
 # col:  name of column that should be used
 # box:  bounding box of final plot
-def vehicle_grid(df, date, hour, n, col="Total", box=None, avg=False):
-    df.Date = df.Date.apply(lambda x: dt.datetime.strptime(x, "%d.%m.%Y"))
+def vehicle_grid(df, n, date=None, hour=None, col="Total", box=None, avg=False):
+    #df.Date = df.Date.apply(lambda x: dt.datetime.strptime(x, "%d.%m.%Y"))
     df.TimeFrom = df.TimeFrom.apply(lambda x: int(x.split(":")[0]))
     
-    day = df[(df.Date == date) & (df.TimeFrom == hour)]
+    if date is not None and hour is not None:
+        day = df[(df.Date == date) & (df.TimeFrom == hour)]
+    elif date is not None:
+        day = df[df.Date == date]
+    elif hour is not None:
+        day = df[df.TimeFrom == hour]
+    else:
+        day = df
+    
     x = day.Longitude.tolist()
     y = day.Latitude.tolist()
     vals = day[col].tolist()
-
-    print(vals)
 
     if box is None:
         box = gb.get_bounds()
