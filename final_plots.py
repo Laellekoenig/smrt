@@ -81,26 +81,27 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/average_temperature.png")
-
+'''
 # plot average amount of vehicles
 print("Calulcating vehicle grid...")
 sum_vehicle_grid = vg.vehicle_grid(verkehr, 7, avg=True)
 
 print("Plotting vehicle avg grid...")
 plt.figure(figsize=(10, 10), dpi=160)
-plt.imshow(sum_vehicle_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('Reds', 6), origin="lower")
-plt.colorbar(label="Average amount of vechicles counted per hour", fraction=0.046, pad=0.04)
+plt.imshow(sum_vehicle_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('Greens', 6), origin="lower")
+plt.colorbar(label="average amount of vechicles counted per hour", fraction=0.046, pad=0.04)
 plt.clim(100, 400)
-streets.plot_streets(zorder=1, color="saddlebrown")
-stations.plot_stations(verkehr, "Geo Point", label="vehicle counting stations", zorder=3, marker="^", color="black", size=70, alpha=.9)
+streets.plot_streets(zorder=1, color="darkred")
+stations.plot_stations(verkehr, "Geo Point", label="vehicle counting stations", zorder=3, marker="^", color="white", size=50, alpha=1, edgecolors="#484141")
 plt.imshow(basel, extent=box, aspect=1.4, zorder=0)
-plt.title(f"Average amount of vehicles counted per hour in Basel from {start} to {end}")
+plt.title(f"Average Amount of Vehicles counted per Hour\nfrom {start} to {end}", fontsize=15, pad=20)
 plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
-'''
 
+
+'''
 # plot grid correlation plot
 print("Calculating correlation")
 grid = gc.correlation_grid(verkehr, luft, start, end, 7)
@@ -119,3 +120,4 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/grid_correlation.png")
+'''
