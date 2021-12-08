@@ -5,7 +5,7 @@ import numpy as np
 
 def correlation_grid(vdf, tdf, start_date, end_date, n, drop_empty=True, box=None):
     # reformat vehicle data frame
-    vdf.Date = vdf.Date.apply(lambda x: dt.datetime.strptime(x, "%d.%m.%Y"))
+    #vdf.Date = vdf.Date.apply(lambda x: dt.datetime.strptime(x, "%d.%m.%Y"))
     vdf.TimeFrom = vdf.TimeFrom.apply(lambda x: int(x.split(":")[0]))
 
     # select time frame from data frames

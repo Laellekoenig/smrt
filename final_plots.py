@@ -8,6 +8,7 @@ import functions.plot_stations as stations
 import functions.plot_streets as streets
 import functions.temperature_grid as tg
 import functions.vehicle_grid as vg
+import functions.grid_correlation as gc
 
 print("Loading data frames...")
 verkehr = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
@@ -25,7 +26,7 @@ luft = f.filter_date(luft, start, end)
 # get map and bounding box
 basel = get_map.get_basel_square(bw=True)
 box = bounds.get_bounds()
-
+'''
 # plot temp every station
 print("Plotting temperature stations...")
 plt.figure(figsize=(10, 10), dpi=160)
@@ -98,3 +99,23 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
+'''
+
+# plot grid correlation plot
+print("Calculating correlation")
+grid = gc.correlation_grid(verkehr, luft, start, end, 7)
+
+print("Plotting correlation grid...")
+plt.figure(figsize=(10, 10), dpi=160)
+plt.imshow(grid, extent=box, zorder=2, alpha=.8, origin="lower", cmap=plt.cm.get_cmap("Reds", 10))
+plt.colorbar(label="correlation", fraction=0.046, pad=0.04)
+plt.clim(0, 1)
+streets.plot_streets(zorder=1, color="darkred")
+stations.plot_stations(verkehr, "Geo Point", zorder=4, label="vehicle counting stations", marker="^", size=50, alpha=1, color="white", edgecolors="#484141")
+stations.plot_stations(luft, "Koordinaten", zorder=3, label="temperature measuring stations", marker="s", color="#484141", size=40, alpha=1)
+plt.imshow(basel, extent=box, aspect=1.4, zorder=0)
+plt.title(f"Correlation between Temperature and Vechicle Count\nfrom {start} to {end}", fontsize=20, pad=20)
+plt.legend()
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.savefig("final_plots/grid_correlation.png")
