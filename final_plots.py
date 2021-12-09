@@ -23,10 +23,13 @@ print("Filtering data frames...")
 verkehr = f.filter_date(verkehr, start, end)
 luft = f.filter_date(luft, start, end)
 
+# remove wrong measuring station
+luft = luft[luft.Name != "Basel_Fenster_Test"]
+
 # get map and bounding box
 basel = get_map.get_basel_square(bw=True)
 box = bounds.get_bounds()
-'''
+
 # plot temp every station
 print("Plotting temperature stations...")
 plt.figure(figsize=(10, 10), dpi=160)
@@ -54,14 +57,14 @@ plt.savefig("final_plots/vehicle_counting_stations.png")
 # both
 print("Plotting measuring stations...")
 plt.figure(figsize=(10, 10), dpi=160)
-stations.plot_stations(luft, "Koordinaten", label="temperature measuring stations", zorder=2, color="darkgreen", size=60)
-stations.plot_stations(verkehr, "Geo Point", label="vehicle couting stations", zorder=2, color="orange", size=60, marker=",")
-streets.plot_streets(zorder=1)
+stations.plot_stations(luft, "Koordinaten", label="temperature measuring stations", zorder=2, color="white", size=100, marker="^", edgecolors="#484141")
+stations.plot_stations(verkehr, "Geo Point", label="vehicle couting stations", zorder=2, color="#484141", size=80, marker="s", alpha=1)
+streets.plot_streets(zorder=1, color="darkred")
 plt.legend()
 plt.imshow(basel, extent=box, aspect=1.4, zorder=0)
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
-plt.title(f"Measuring Stations in Basel from {start} to {end}")
+plt.title(f"Measuring Stations in Basel\nfrom {start} to {end}", fontsize=15, pad=20)
 plt.savefig("final_plots/measuring_stations.png")
 
 # plot average temperature over time frame
@@ -70,18 +73,18 @@ avg_temp_grid = tg.temperature_grid(luft, 50, interpolate=True)
 
 print("Plotting average temperature...")
 plt.figure(figsize=(10, 10), dpi=160)
-plt.imshow(avg_temp_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('plasma', 15), origin="lower")
+plt.imshow(avg_temp_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('YlOrRd', 15), origin="lower")
 plt.colorbar(label="°C", fraction=0.046, pad=0.04)
 plt.clim(5, 20)
-streets.plot_streets(zorder=1)
-stations.plot_stations(luft, "Koordinaten", label="temperature measuring stations", zorder=3, color="black", size=60, alpha=.7)
+streets.plot_streets(zorder=1, color="darkred")
+stations.plot_stations(luft, "Koordinaten", label="temperature measuring stations", zorder=3, color="#484141", size=40, alpha=1, marker="s")
 plt.imshow(basel, extent=box, aspect=1.4, zorder=0)
-plt.title(f"Average Temperature in Basel from {start} to {end}")
+plt.title(f"Average Temperature in Basel\nfrom {start} to {end}", fontsize=15, pad=20)
 plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/average_temperature.png")
-'''
+
 # plot average amount of vehicles
 print("Calulcating vehicle grid...")
 sum_vehicle_grid = vg.vehicle_grid(verkehr, 7, avg=True)
@@ -100,8 +103,6 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
 
-
-'''
 # plot grid correlation plot
 print("Calculating correlation")
 grid = gc.correlation_grid(verkehr, luft, start, end, 7)
@@ -120,4 +121,3 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/grid_correlation.png")
-'''
