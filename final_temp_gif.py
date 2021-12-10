@@ -52,7 +52,7 @@ while current_date < end_date:
     plt.clim(0, 30)
     streets.plot_streets(zorder=1, color="black", linewidth=2)
     streets.plot_streets(zorder=1, color="white", linewidth=.75, label=None, fstr="--", dashes=(3, 7))
-    stations.plot_stations(luft, "Koordinaten", label="temperature measuring stations", zorder=3, color="#484141", size=40, alpha=1, marker="s")
+    stations.plot_stations(luft, "Koordinaten", label="temperature measuring station", zorder=3, color="#484141", size=40, alpha=1, marker="s")
     plt.imshow(basel, extent=box, aspect=1.4, zorder=0)
     plt.title(f"Average Temperature in Basel\n{current_date_string} {current_hour}:00", fontsize=17, pad=20, linespacing=1.5)
     plt.legend()
