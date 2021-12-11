@@ -1,6 +1,8 @@
 import pandas as pd
 import datetime as dt
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
 import functions.filter as f
 import functions.get_map as get_map
 import functions.get_bounds as bounds
@@ -9,14 +11,22 @@ import functions.plot_streets as streets
 import functions.temperature_grid as tg
 import functions.vehicle_grid as vg
 import functions.grid_correlation as gc
+import functions.calc_corr as cc
 
 print("Loading data frames...")
 verkehr = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
 luft = pd.read_csv("datasets/luftklima_reformatted.csv")
 
 # define time frame
-start = "2021-05-03"
-end = "2021-05-09"
+start = "2021-05-01"
+end = "2021-05-31"
+
+# define stuff for correlation calculation
+radius = 0.4 # include temperature stations within this radius from a vehicle measurement station
+hour_from = "9" # starting time in hours (addition to date)
+hour_to = "9"
+time_step = 1 # steps in hours of which you want tot ake measurements (e.g. every 2 hours)
+half_day = True # if True, only take measurements from 9:00 to 18:00 from everyday (then function does not include the 3 arguments above)
 
 # filter dates
 print("Filtering data frames...")
@@ -108,6 +118,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
 
+"""
 # plot grid correlation plot
 print("Calculating correlation")
 grid = gc.correlation_grid(verkehr, luft, start, end, 7)
@@ -127,3 +138,42 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/grid_correlation.png")
+"""
+# calculate correltation and ellipses
+temperature = pd.read_csv("datasets/luftklima_reformatted.csv")
+vehicles = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
+corr = cc.get_corr_for_vstation(temperature, vehicles, radius, start, end, hour_from, hour_to, time_step, half_day)
+el = cc.calc_ellipse_dists(corr[0], corr[1], radius)
+
+
+# plot correlation (new variant)
+fig, ax = plt.subplots(figsize=(7, 7), dpi=160)
+#plt.figure(figsize=(7, 7), dpi=160)
+
+cmap = matplotlib.cm.get_cmap('Greens', 10)
+norm = matplotlib.colors.Normalize(vmin=0.0, vmax=1.0)
+ellipses = []
+for i in range(len(corr[2])):
+    if corr[2][i] > -999999999999: #get rid of NaN
+        ell = Ellipse((corr[0][i], corr[1][i]), el[0][i], el[1][i], 0, color=cmap(norm(corr[2][i])), fill = True, alpha=.7)
+        #cir = plt.Circle((corr[0][i], corr[1][i]), 0.004, color=cmap(norm(corr[2][i])), fill = True, alpha=.7)
+        ellipses.append(ell)
+for e in ellipses:
+     ax.add_artist(e)
+
+streets.plot_streets(zorder=1, color="indigo")        
+stations.plot_stations(vehicles, "Geo Point", zorder=3, size=25, color="firebrick", alpha=.9, label="Vehicle counting Station", marker=",")
+stations.plot_stations(temperature, "Koordinaten", zorder=3, size=25, color="darkgoldenrod", alpha=.9, label="Temperature measuring station", marker="^")
+#plt.scatter(corr[0], corr[1], marker="o", zorder=1, c=corr[2], s=600)
+plt.imshow(basel, extent=box, zorder=0, aspect=1.4, alpha=.7, cmap = matplotlib.cm.get_cmap('Greens', 10))
+plt.colorbar(label="correlation", fraction=0.046, pad=0.04)
+plt.clim((0, 1))
+plt.title("Correlation between Temperature and counted Vehicles, from " + start + " to " + end + ", pad=20")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.legend(loc='lower right')
+plt.show()
+
+img_name = "test_images/corr.png"
+fig.savefig(img_name)
+plt.close()
