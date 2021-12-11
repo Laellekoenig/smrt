@@ -13,6 +13,7 @@ import functions.vehicle_grid as vg
 import functions.grid_correlation as gc
 import functions.calc_corr as cc
 
+
 print("Loading data frames...")
 verkehr = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
 luft = pd.read_csv("datasets/luftklima_reformatted.csv")
@@ -118,6 +119,10 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
 
+# reload data frames for grid correlation to work, not ideal
+print("reloading verkehrszählungen data set for correlation...")
+verkehr = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
+verkehr = f.filter_date(verkehr, start, end)
 
 # plot grid correlation plot
 print("Calculating correlation")
@@ -145,7 +150,6 @@ temperature = pd.read_csv("datasets/luftklima_reformatted.csv")
 vehicles = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
 corr = cc.get_corr_for_vstation(temperature, vehicles, radius, start, end, hour_from, hour_to, time_step, half_day)
 el = cc.calc_ellipse_dists(corr[0], corr[1], radius)
-
 
 # plot correlation (new variant)
 print("Plotting new correlation...")

@@ -1,0 +1,18 @@
+1. Intro
+    - urban heat island
+    - verbindig zu social good, environment
+    - welli datasets und wieso
+2. methodik
+    - wie datasets cleaned
+    - simpeli plots, statione, temperatur, auto mässige
+    - wie average berächnet (grid)
+    - wie temperature interpoliert
+    - wie korrelation usgrächnet
+3. resultat
+    - wie ka me die plots interpretiere
+    - connection zu heat island
+    - unseri interpretation
+4. reflektion
+    - was ka me besser mache
+    - was isch falsch gloffe
+    - wie ka me druf ufbaue
