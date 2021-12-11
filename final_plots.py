@@ -118,7 +118,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/avg_vehicles.png")
 
-"""
+
 # plot grid correlation plot
 print("Calculating correlation")
 grid = gc.correlation_grid(verkehr, luft, start, end, 7)
@@ -138,8 +138,9 @@ plt.legend()
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/grid_correlation.png")
-"""
+
 # calculate correltation and ellipses
+print("Calculating new correlation...")
 temperature = pd.read_csv("datasets/luftklima_reformatted.csv")
 vehicles = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
 corr = cc.get_corr_for_vstation(temperature, vehicles, radius, start, end, hour_from, hour_to, time_step, half_day)
@@ -147,9 +148,8 @@ el = cc.calc_ellipse_dists(corr[0], corr[1], radius)
 
 
 # plot correlation (new variant)
+print("Plotting new correlation...")
 fig, ax = plt.subplots(figsize=(7, 7), dpi=160)
-#plt.figure(figsize=(7, 7), dpi=160)
-
 cmap = matplotlib.cm.get_cmap('Greens', 10)
 norm = matplotlib.colors.Normalize(vmin=0.0, vmax=1.0)
 ellipses = []
