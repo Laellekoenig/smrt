@@ -3,7 +3,23 @@ import functions.get_bounds as gb
 import datetime as dt
 import numpy as np
 
-def correlation_grid(vdf, tdf, start_date, end_date, n, drop_empty=True, box=None):
+def handle(x, y):
+    done = False
+    start = 0
+    while (not done):
+        altered = False
+
+        for i in range(start, len(x)):
+            if np.isnan(x[i]) or np.isnan(y[i]):
+                del x[i]
+                del y[i]
+                altered = True
+                break
+        
+        if not altered:
+            return
+        
+def correlation_grid(vdf, tdf, start_date, end_date, n, drop_empty=True, box=None, ignore_nan=True):
     # reformat vehicle data frame
     #vdf.Date = vdf.Date.apply(lambda x: dt.datetime.strptime(x, "%d.%m.%Y"))
     vdf.TimeFrom = vdf.TimeFrom.apply(lambda x: int(x.split(":")[0]))
@@ -63,6 +79,9 @@ def correlation_grid(vdf, tdf, start_date, end_date, n, drop_empty=True, box=Non
             y = []
             for a2 in a2_lst:
                 y.append(a2[i][j])
+            
+            if ignore_nan:
+                handle(x, y)
             
             x = np.array(x)
             y = np.array(y)

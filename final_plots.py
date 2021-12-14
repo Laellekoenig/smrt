@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np
 import datetime as dt
+import math
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
@@ -19,8 +21,8 @@ verkehr = pd.read_csv("datasets/verkehrszählungen_reformatted.csv")
 luft = pd.read_csv("datasets/luftklima_reformatted.csv")
 
 # define time frame
-start = "2021-05-01"
-end = "2021-05-31"
+start = "2020-10-01"
+end = "2021-10-01"
 
 # define stuff for correlation calculation
 radius = 0.4 # include temperature stations within this radius from a vehicle measurement station
@@ -81,15 +83,38 @@ plt.ylabel("Latitude")
 plt.title(f"Measuring Stations in Basel\nfrom {start} to {end}", fontsize=17, pad=20)
 plt.savefig("final_plots/measuring_stations.png")
 
+quit()
+
 # plot average temperature over time frame
 print("Calculating average temperature grid...")
 avg_temp_grid = tg.temperature_grid(luft, 50, interpolate=True)
 
+max_temp = -np.Inf
+for i in range(50):
+    for j in range(50):
+        val = avg_temp_grid[i][j]
+        if not np.isnan(val) and val > max_temp:
+            max_temp = val
+
+min_temp = np.Inf
+for i in range(50):
+    for j in range(50):
+        val = avg_temp_grid[i][j]
+        if not np.isnan(val) and val < min_temp:
+            min_temp = val
+
+max_temp = math.ceil(max_temp)
+min_temp = math.floor(min_temp)
+delta = max_temp - min_temp
+
+if delta < 10:
+    delta *= 2
+
 print("Plotting average temperature...")
 plt.figure(figsize=(10, 10), dpi=160)
-plt.imshow(avg_temp_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('YlOrRd', 15), origin="lower")
+plt.imshow(avg_temp_grid, extent=box, zorder=2, alpha=.8, cmap=plt.cm.get_cmap('YlOrRd', delta), origin="lower")
 plt.colorbar(label="°C", fraction=0.046, pad=0.04)
-plt.clim(5, 20)
+plt.clim(min_temp, max_temp)
 streets.plot_streets(zorder=1, color="black", linewidth=2)
 streets.plot_streets(zorder=1, color="white", linewidth=.75, fstr="--", label=None, dashes=(3, 7))
 stations.plot_stations(luft, "Koordinaten", label="temperature measuring station", zorder=3, color="#484141", size=40, alpha=1, marker="s")
@@ -144,6 +169,8 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.savefig("final_plots/grid_correlation.png")
 
+quit()
+
 # calculate correltation and ellipses
 print("Calculating new correlation...")
 temperature = pd.read_csv("datasets/luftklima_reformatted.csv")
@@ -176,7 +203,7 @@ plt.title("Correlation between Temperature and counted Vehicles, from " + start 
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.legend(loc='lower right')
-plt.show()
+#plt.show()
 
 img_name = "test_images/corr.png"
 fig.savefig(img_name)
