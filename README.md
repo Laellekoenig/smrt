@@ -4,12 +4,12 @@
  The goal of this project is to identify whether the so-called "Urban heat island phenomenon" can be observed in Basel by visualizing traffic and temperature data sets. If present, this will uncover areas of Basel that might have a lower quality of life and could possibly be improved through governmental policies.
 
  ---
- # Plots
+ # Some Plots
 
 ![temperature gif](final_plots/temp.gif)
 
- ![average temperature](final_plots/average_temperature.png)
+![measuring stations](final_plots/measuring_stations.png)
 
- ![average vehicle count](final_plots/avg_vehicles.png)
+![grid correlation](final_plots/correlation/corr2101.png)
 
- ![grid correlation](final_plots/grid_correlation.png)
+![grid correlation2](final_plots/correlation/corr2107.png)
