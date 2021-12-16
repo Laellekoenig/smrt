@@ -13,3 +13,9 @@
 ![grid correlation](final_plots/correlation/corr2101.png)
 
 ![grid correlation2](final_plots/correlation/corr2107.png)
+
+![correlation nearest](final_plots/correlation/corr_nearest_year.png)
+
+![correlation nearest year](final_plots/correlation/corr_year.png)
+
+![correlation nearest august](final_plots/correlation/corr_nearest_august.png)
